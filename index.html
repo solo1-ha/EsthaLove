@@ -96,6 +96,15 @@
             background: rgba(255, 255, 255, 0.4);
             border-radius: 10px;
         }
+        .material-symbols-outlined, .material-icons-round, .material-icons-outlined {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .fonts-loaded .material-symbols-outlined, 
+        .fonts-loaded .material-icons-round, 
+        .fonts-loaded .material-icons-outlined {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -212,6 +221,10 @@
             createHeart();
         }
         setInterval(createHeart, 2000);
+
+        document.fonts.ready.then(() => {
+            document.documentElement.classList.add('fonts-loaded');
+        });
     </script>
 </body>
 

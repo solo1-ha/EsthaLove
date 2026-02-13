@@ -104,6 +104,19 @@
                 transform: rotate(360deg) scale(1.1);
             }
         }
+
+        .material-symbols-outlined,
+        .material-icons-round,
+        .material-icons-outlined {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .fonts-loaded .material-symbols-outlined,
+        .fonts-loaded .material-icons-round,
+        .fonts-loaded .material-icons-outlined {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -315,6 +328,10 @@
 
         // Initialize progress
         progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+
+        document.fonts.ready.then(() => {
+            document.documentElement.classList.add('fonts-loaded');
+        });
     </script>
 </body>
 
