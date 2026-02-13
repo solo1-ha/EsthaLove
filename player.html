@@ -126,7 +126,7 @@
 
 <body
     class="bg-background-light dark:bg-background-dark font-display min-h-screen relative px-4 py-20 flex items-center justify-center overflow-x-hidden overflow-y-auto">
-    <audio id="bg-music" src="son/J'ai peur de te perdre.mp3" loop></audio>
+    <audio id="bg-music" src="son/J'ai peur de te perdre.mp3" preload="auto" loop></audio>
 
     <!-- Background Animated Layers -->
     <div class="fixed inset-0 pulse-bg -z-10">
@@ -292,7 +292,7 @@
             }
         }
 
-        audio.addEventListener('play', () => {
+        audio.addEventListener('playing', () => {
             const albumArt = document.getElementById('album-art');
             playPauseBtn.querySelector('span').textContent = 'pause';
             albumArt.classList.add('rotating');
@@ -300,6 +300,11 @@
 
             if (rafId) cancelAnimationFrame(rafId);
             rafId = requestAnimationFrame(updateProgress);
+        });
+
+        audio.addEventListener('waiting', () => {
+            // Optional: can show a subtle loading state here if desired
+            if (rafId) cancelAnimationFrame(rafId);
         });
 
         audio.addEventListener('pause', () => {
