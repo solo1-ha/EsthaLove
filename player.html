@@ -270,33 +270,53 @@
         ];
 
         function toggleAudio() {
-            const albumArt = document.getElementById('album-art');
             if (audio.paused) {
                 audio.play();
-                playPauseBtn.querySelector('span').textContent = 'pause';
-                albumArt.classList.add('rotating');
-                albumArt.classList.remove('paused');
             } else {
                 audio.pause();
-                playPauseBtn.querySelector('span').textContent = 'play_arrow';
-                albumArt.classList.add('paused');
             }
         }
 
-        function formatTime(seconds) {
-            const min = Math.floor(seconds / 60);
-            const sec = Math.floor(seconds % 60);
-            return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-        }
+        let rafId = null;
 
         function updateProgress() {
-            if (!audio.duration) return;
-            const percent = (audio.currentTime / audio.duration) || 0;
+            if (!audio.duration || audio.duration === Infinity) return;
+
+            const percent = audio.currentTime / audio.duration;
             const offset = circumference - (percent * circumference);
             progressCircle.style.strokeDashoffset = offset;
             currentTimeEl.textContent = formatTime(audio.currentTime);
 
-            // Sync Lyrics
+            if (!audio.paused && !audio.ended) {
+                rafId = requestAnimationFrame(updateProgress);
+            }
+        }
+
+        audio.addEventListener('play', () => {
+            const albumArt = document.getElementById('album-art');
+            playPauseBtn.querySelector('span').textContent = 'pause';
+            albumArt.classList.add('rotating');
+            albumArt.classList.remove('paused');
+
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(updateProgress);
+        });
+
+        audio.addEventListener('pause', () => {
+            const albumArt = document.getElementById('album-art');
+            playPauseBtn.querySelector('span').textContent = 'play_arrow';
+            albumArt.classList.add('paused');
+            if (rafId) cancelAnimationFrame(rafId);
+        });
+
+        audio.addEventListener('ended', () => {
+            if (rafId) cancelAnimationFrame(rafId);
+            progressCircle.style.strokeDashoffset = circumference;
+            currentTimeEl.textContent = formatTime(0);
+        });
+
+        // Use timeupdate only for lyrics sync (less frequent is fine)
+        audio.addEventListener('timeupdate', () => {
             const currentLyric = [...lyrics].reverse().find(l => audio.currentTime >= l.time);
             if (currentLyric && lyricLine.textContent !== currentLyric.text) {
                 lyricLine.style.opacity = 0;
@@ -304,7 +324,6 @@
                     lyricLine.textContent = currentLyric.text;
                     lyricLine.style.opacity = 1;
 
-                    // Update dots
                     const lIndex = lyrics.indexOf(currentLyric);
                     dots.forEach((dot, i) => {
                         dot.style.background = i === lIndex ? 'white' : 'rgba(255,255,255,0.2)';
@@ -312,9 +331,7 @@
                     });
                 }, 300);
             }
-        }
-
-        audio.addEventListener('timeupdate', updateProgress);
+        });
 
         function handleMetadata() {
             if (audio.duration && audio.duration !== Infinity) {
