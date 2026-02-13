@@ -96,13 +96,15 @@
             background: rgba(255, 255, 255, 0.4);
             border-radius: 10px;
         }
-        .material-symbols-outlined, .material-icons-round, .material-icons-outlined {
+        .material-symbols-outlined, .material-icons, .material-icons-round, .material-icons-outlined, .material-icons-sharp {
             opacity: 0;
             transition: opacity 0.3s ease;
         }
         .fonts-loaded .material-symbols-outlined, 
+        .fonts-loaded .material-icons,
         .fonts-loaded .material-icons-round, 
-        .fonts-loaded .material-icons-outlined {
+        .fonts-loaded .material-icons-outlined,
+        .fonts-loaded .material-icons-sharp {
             opacity: 1;
         }
     </style>
@@ -225,6 +227,10 @@
         document.fonts.ready.then(() => {
             document.documentElement.classList.add('fonts-loaded');
         });
+        // Fallback: Show icons after 2 seconds regardless of font status
+        setTimeout(() => {
+            document.documentElement.classList.add('fonts-loaded');
+        }, 2000);
     </script>
 </body>
 

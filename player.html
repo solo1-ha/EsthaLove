@@ -332,6 +332,10 @@
         document.fonts.ready.then(() => {
             document.documentElement.classList.add('fonts-loaded');
         });
+        // Fallback: Show icons after 2 seconds regardless of font status
+        setTimeout(() => {
+            document.documentElement.classList.add('fonts-loaded');
+        }, 2000);
     </script>
 </body>
 
