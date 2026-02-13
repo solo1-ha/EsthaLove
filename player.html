@@ -289,11 +289,11 @@
             return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
         }
 
-        audio.addEventListener('timeupdate', () => {
+        function updateProgress() {
+            if (!audio.duration) return;
             const percent = (audio.currentTime / audio.duration) || 0;
             const offset = circumference - (percent * circumference);
             progressCircle.style.strokeDashoffset = offset;
-
             currentTimeEl.textContent = formatTime(audio.currentTime);
 
             // Sync Lyrics
@@ -312,11 +312,24 @@
                     });
                 }, 300);
             }
-        });
+        }
 
-        audio.addEventListener('loadedmetadata', () => {
-            durationEl.textContent = formatTime(audio.duration);
-        });
+        audio.addEventListener('timeupdate', updateProgress);
+
+        function handleMetadata() {
+            if (audio.duration && audio.duration !== Infinity) {
+                durationEl.textContent = formatTime(audio.duration);
+            }
+        }
+
+        audio.addEventListener('loadedmetadata', handleMetadata);
+        audio.addEventListener('durationchange', handleMetadata);
+        audio.addEventListener('canplay', handleMetadata);
+
+        // Forces duration check if already loaded
+        if (audio.readyState >= 1) {
+            handleMetadata();
+        }
 
         function rewind(s) { audio.currentTime -= s; }
         function forward(s) { audio.currentTime += s; }
