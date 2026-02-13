@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="light" lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Une mélodie pour Estha</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff758c",
+                        "secondary": "#ff7eb3",
+                        "background-light": "#f8f5f6",
+                        "background-dark": "#230f12",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .pulse-bg {
+            background: radial-gradient(circle at center, #ff7eb3 0%, #ff758c 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .heart-float {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .lyrics-gradient {
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+        }
+
+        .rotating {
+            animation: rotate 20s linear infinite;
+        }
+
+        .paused {
+            animation-play-state: paused;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg) scale(1.1);
+            }
+
+            to {
+                transform: rotate(360deg) scale(1.1);
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display min-h-screen relative px-4 py-20 flex items-center justify-center overflow-x-hidden overflow-y-auto">
+    <audio id="bg-music" src="son/J'ai peur de te perdre.mp3" loop></audio>
+
+    <!-- Background Animated Layers -->
+    <div class="fixed inset-0 pulse-bg -z-10">
+        <!-- Floating Elements Decor -->
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"></div>
+        <!-- Hearts Symbols scattered -->
+        <span class="material-icons-round heart-float text-white/20 text-4xl top-[10%] left-[15%]">favorite</span>
+        <span class="material-icons-round heart-float text-white/30 text-2xl top-[40%] left-[8%]">favorite</span>
+        <span class="material-icons-round heart-float text-white/20 text-5xl top-[70%] left-[20%]">favorite</span>
+        <span class="material-icons-round heart-float text-white/25 text-3xl top-[15%] right-[10%]">favorite</span>
+        <span class="material-icons-round heart-float text-white/15 text-6xl top-[50%] right-[15%]">favorite</span>
+        <span class="material-icons-round heart-float text-white/30 text-2xl top-[80%] right-[5%]">favorite</span>
+    </div>
+
+    <!-- Main Player Container -->
+    <main class="relative w-full max-w-4xl px-4 md:px-6 flex flex-col items-center">
+        <!-- Header Section -->
+        <header class="mb-8 md:mb-12 text-center text-white relative">
+            <a href="index.html"
+                class="fixed top-6 left-1/2 -translate-x-1/2 text-white/70 hover:text-white transition-colors flex items-center gap-2 text-[10px] md:text-sm font-medium tracking-widest uppercase z-30 bg-black/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                <span class="material-symbols-outlined text-xs md:text-sm">arrow_back</span>
+                Retour
+            </a>
+            <h1 class="font-serif text-4xl md:text-7xl mb-2 drop-shadow-sm italic">Pour Estha</h1>
+            <p class="text-white/80 tracking-[0.2em] uppercase text-[10px] md:text-xs font-medium">Une mélodie gravée
+                dans le temps</p>
+        </header>
+
+        <!-- Circular Audio Player -->
+        <div class="relative group">
+            <!-- Outer Glow -->
+            <div
+                class="absolute inset-0 bg-primary/30 rounded-full blur-2xl group-hover:bg-primary/50 transition-all duration-700">
+            </div>
+            <!-- Glass Player Body -->
+            <div
+                class="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[420px] md:h-[420px] glass rounded-full flex items-center justify-center p-6 md:p-8 shadow-2xl border border-white/30">
+                <!-- Circular Progress Ring SVG -->
+                <svg class="absolute inset-0 w-full h-full progress-ring" viewbox="0 0 100 100">
+                    <circle cx="50" cy="50" fill="none" r="48" stroke="rgba(255,255,255,0.1)" stroke-width="1.5">
+                    </circle>
+                    <circle id="progress-circle" cx="50" cy="50" fill="none" r="48" stroke="url(#gradient-ring)"
+                        stroke-dasharray="301.59" stroke-dashoffset="301.59" stroke-linecap="round" stroke-width="2">
+                    </circle>
+                    <defs>
+                        <lineargradient id="gradient-ring" x1="0%" x2="100%" y1="0%" y2="0%">
+                            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1"></stop>
+                            <stop offset="100%" style="stop-color:#ffccd5;stop-opacity:1"></stop>
+                        </lineargradient>
+                    </defs>
+                </svg>
+                <!-- Album Art Style Inner Circle -->
+                <div
+                    class="relative w-full h-full rounded-full overflow-hidden border-4 border-white/10 flex items-center justify-center">
+                    <img id="album-art" alt="Abstract visual representation of love"
+                        class="absolute inset-0 w-full h-full object-cover opacity-100 scale-110 paused"
+                        src="images/pochette-son.jpeg" />
+                    <!-- Controls Center -->
+                    <div class="relative z-10 flex flex-col items-center">
+                        <button onclick="toggleAudio()" id="play-pause-btn"
+                            class="w-20 h-20 md:w-32 md:h-32 bg-white rounded-full flex items-center justify-center text-primary shadow-[0_0_40px_rgba(255,255,255,0.4)] hover:scale-105 transition-transform duration-300 group/btn active:scale-95">
+                            <span
+                                class="material-icons-round text-4xl md:text-6xl translate-x-1 group-hover/btn:scale-110 transition-transform">play_arrow</span>
+                        </button>
+                        <div class="mt-4 md:mt-6 flex items-center gap-6 md:gap-8 text-white/90">
+                            <button onclick="rewind(5)" class="hover:text-white transition-colors active:scale-90">
+                                <span class="material-icons-round text-xl md:text-2xl">replay_5</span>
+                            </button>
+                            <button onclick="forward(5)" class="hover:text-white transition-colors active:scale-90">
+                                <span class="material-icons-round text-xl md:text-2xl">forward_5</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Time Indicators -->
+                <div
+                    class="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex gap-3 md:gap-4 text-white/60 text-[8px] md:text-[10px] tracking-widest font-semibold">
+                    <span id="current-time">00:00</span>
+                    <span class="opacity-30">/</span>
+                    <span id="duration">00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lyrics Section -->
+        <div class="mt-8 md:mt-16 w-full max-w-md text-center px-4">
+            <div class="lyrics-gradient overflow-hidden">
+                <p id="lyric-line" class="text-white/90 text-sm md:text-xl font-light italic">
+                    Appuie sur play pour écouter ton son...
+                </p>
+            </div>
+            <div class="flex justify-center gap-1 mt-3 md:mt-4">
+                <div
+                    class="audio-dot w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-white/20 transition-all duration-300 active">
+                </div>
+                <div class="audio-dot w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-white/20 transition-all duration-300">
+                </div>
+                <div class="audio-dot w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-white/20 transition-all duration-300">
+                </div>
+                <div class="audio-dot w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-white/20 transition-all duration-300">
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer / Signature -->
+        <footer class="mt-12 pb-8 text-center">
+            <p class="text-white/50 text-sm italic font-light tracking-wide">— Mikaël</p>
+        </footer>
+    </main>
+
+    <!-- Side Control Hints (Desktop Only) -->
+    <aside class="hidden xl:flex fixed left-12 flex-col gap-6 text-white/40">
+        <div class="flex flex-col items-center gap-2">
+            <span class="text-[10px] uppercase vertical-text tracking-widest mb-4">Volume</span>
+            <div class="w-1 h-32 bg-white/10 rounded-full relative overflow-hidden group cursor-pointer"
+                onclick="updateVolume(event)">
+                <div id="volume-bar" class="absolute bottom-0 w-full h-2/3 bg-white/60 rounded-full transition-all">
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <script>
+        const audio = document.getElementById('bg-music');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const progressCircle = document.getElementById('progress-circle');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+        const lyricLine = document.getElementById('lyric-line');
+        const dots = document.querySelectorAll('.audio-dot');
+        const volumeBar = document.getElementById('volume-bar');
+
+        const circumference = 2 * Math.PI * 48;
+
+        const lyrics = [
+            { time: 0, text: "Même à distance, mon cœur bat pour toi..." },
+            { time: 10, text: "Chaque note est un baiser envoyé vers toi..." },
+            { time: 20, text: "Entre Labé et Dubreka, l'amour chante..." },
+            { time: 30, text: "Tu es ma plus belle mélodie, Estha." }
+        ];
+
+        function toggleAudio() {
+            const albumArt = document.getElementById('album-art');
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.querySelector('span').textContent = 'pause';
+                albumArt.classList.add('rotating');
+                albumArt.classList.remove('paused');
+            } else {
+                audio.pause();
+                playPauseBtn.querySelector('span').textContent = 'play_arrow';
+                albumArt.classList.add('paused');
+            }
+        }
+
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            const percent = (audio.currentTime / audio.duration) || 0;
+            const offset = circumference - (percent * circumference);
+            progressCircle.style.strokeDashoffset = offset;
+
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+
+            // Sync Lyrics
+            const currentLyric = [...lyrics].reverse().find(l => audio.currentTime >= l.time);
+            if (currentLyric && lyricLine.textContent !== currentLyric.text) {
+                lyricLine.style.opacity = 0;
+                setTimeout(() => {
+                    lyricLine.textContent = currentLyric.text;
+                    lyricLine.style.opacity = 1;
+
+                    // Update dots
+                    const lIndex = lyrics.indexOf(currentLyric);
+                    dots.forEach((dot, i) => {
+                        dot.style.background = i === lIndex ? 'white' : 'rgba(255,255,255,0.2)';
+                        dot.style.transform = i === lIndex ? 'scale(1.5)' : 'scale(1)';
+                    });
+                }, 300);
+            }
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = formatTime(audio.duration);
+        });
+
+        function rewind(s) { audio.currentTime -= s; }
+        function forward(s) { audio.currentTime += s; }
+
+        function updateVolume(e) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const y = e.clientY - rect.top;
+            const height = rect.height;
+            const vol = Math.max(0, Math.min(1, 1 - (y / height)));
+            audio.volume = vol;
+            volumeBar.style.height = `${vol * 100}%`;
+        }
+
+        // Initialize progress
+        progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+    </script>
+</body>
+
+</html>
